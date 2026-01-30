@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>AGORA Diário</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg-main:#0e1412;
+  --bg-card:#151d1a;
+  --bg-soft:#1e2a26;
+
+  --gold:#f5c46b;
+  --green:#3ddc97;
+  --green-soft:#7fffd4;
+
+  --text-main:#ffffff;
+  --text-soft:rgba(255,255,255,.65);
+  --text-muted:rgba(255,255,255,.45);
+
+  --radius:16px;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background: radial-gradient(circle at top, #14201c, var(--bg-main));
+  color:var(--text-main);
+}
+
+/* ===== APP MOBILE REAL ===== */
+.app{
+  max-width:420px;
+  margin:auto;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  padding:18px 28px 28px;
+  overflow-y:auto;
+}
+
+.hidden{display:none}
+
+/* ===== HEADER ===== */
+.header{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:18px;
+}
+.header img{
+  height:115px; /* tamanho ideal mobile */
+  max-width: 100%;
+}
+
+/* ===== TITULOS ===== */
+h1{font-size:22px;margin:0 0 4px}
+.subtitle{
+  font-size:14px;
+  color:var(--text-soft);
+  margin-bottom:18px;
+}
+
+/* ===== BLOCO (FIX PRINCIPAL) ===== */
+.block{
+  background:linear-gradient(180deg,var(--bg-card),#101614);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+.block h2{
+  font-size:15px;
+  margin:0 0 4px;
+  color:var(--gold);
+}
+.block p{
+  font-size:13px;
+  color:var(--text-muted);
+  margin:0 0 10px;
+}
+
+/* ===== INPUT ===== */
+textarea{
+  width:100%;
+  min-height:56px;
+  background:var(--bg-soft);
+  border:none;
+  border-radius:12px;
+  padding:12px;
+  color:#fff;
+  resize:none;
+  font-size:14px;
+}
+textarea:focus{outline:1px solid var(--green-soft)}
+
+textarea::placeholder{
+  color: rgba(255,255,255,.35);
+  font-style: italic;
+}
+
+
+/* ===== BOTÕES ===== */
+button{
+  width:100%;
+  border:none;
+  border-radius:14px;
+  padding:14px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.primary{
+  background:linear-gradient(135deg,var(--gold),#ffd98e);
+  color:#000;
+}
+.secondary{
+  background:var(--bg-soft);
+  color:#fff;
+  margin-top:10px;
+}
+.disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.center{text-align:center}
+
+/* ===== TEXTO AUX ===== */
+.reward,.motivation,.streak,.passive{
+  font-size:13px;
+  margin-top:14px;
+  color:var(--text-soft);
+}
+.passive span{color:var(--green-soft)}
+
+/* ===== HISTÓRICO ===== */
+.history-item{
+  background:var(--bg-card);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:10px;
+}
+.history-item strong{font-size:14px}
+.history-item small{font-size:12px;color:var(--text-muted)}
+
+/* ===== INSIGHTS ===== */
+.tabs{
+  display:flex;
+  gap:8px;
+  margin:18px 0;
+}
+.tab{
+  flex:1;
+  padding:10px;
+  border-radius:12px;
+  background:var(--bg-soft);
+  color:var(--text-muted);
+  border:none;
+}
+.tab.active{
+  background:linear-gradient(135deg,var(--green),var(--green-soft));
+  color:#000;
+  font-weight:700;
+}
+
+.weekdays{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  text-align:center;
+  font-size:12px;
+  color:var(--text-muted);
+  margin-bottom:6px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+}
+
+.dot{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+}
+.ok{
+  background:linear-gradient(135deg,var(--green),var(--green-soft));
+  color:#000;
+}
+.fail{
+  border:1px solid #3a4a45;
+  color:#3a4a45;
+}
+
+/* ===== CONTAINERS INSIGHTS ===== */
+#insight-semanal,
+#insight-mensal,
+#insight-anual{
+  background:var(--bg-card);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+}
+
+/* ===== ANUAL ===== */
+.month-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:13px;
+  margin-bottom:10px;
+}
+.bar{
+  width:60%;
+  height:6px;
+  background:#1b2622;
+  border-radius:4px;
+}
+.bar span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--gold),var(--green));
+}
+
+/* ===== COUNTDOWN ===== */
+.countdown{
+  font-size:12px;
+  color:var(--text-muted);
+  text-align:center;
+  margin-top:6px;
+}
+
+#fechamento-ok button {
+  margin-top: 24px;
+}
+
+#history h1 {
+  margin-bottom: 20px;
+}
+
+#exec-agora .passive {
+  margin-top: 18px;
+  margin-bottom: 24px;
+}
+
+#decisao .passive {
+  margin-top: 18px;
+  margin-bottom: 26px;
+}
+
+#exec-depois .passive {
+  margin-top: 18px;
+  margin-bottom: 24px;
+}
+
+.toast{
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--gold), var(--green-soft));
+  color: #000;
+  padding: 12px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity .25s ease, top .25s ease;
+}
+
+.toast.show{
+  opacity: 1;
+  top: 22px;
+}
+
+
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="header">
+  <img src="img/agoralogo.png" alt="AGORA Diário">
+</div>
+
+<div id="toast" class="toast hidden">
+  Preencha tudo para continuar
+</div>
+
+<!-- DEFINIÇÃO -->
+<section id="define" class="hidden">
+  <h1>Rotina de hoje</h1>
+  <div class="subtitle">Abra. Inicie. Execute.</div>
+
+  <div class="block">
+    <h2>AGORA</h2>
+    <p>Comece por isso. Sem negociar.</p>
+    <textarea id="agora" placeholder="Ex: Estudar 30 minutos"></textarea>
+  </div>
+
+  <div class="block">
+    <h2>DEPOIS</h2>
+    <p>Se sobrar energia.</p>
+    <textarea id="depois" placeholder="Ex: Organizar material da semana"></textarea>
+  </div>
+
+  <div class="block">
+    <h2>FORA HOJE</h2>
+    <p>Isso não entra na rotina.</p>
+    <textarea id="fora" placeholder="Ex: Redes sociais antes de concluir tudo"></textarea>
+  </div>
+
+  <button class="primary" onclick="definir()">Rotina definida</button>
+</section>
+
+<!-- EXECUÇÃO AGORA -->
+<section id="exec-agora" class="hidden center">
+  <h1>Execute agora</h1>
+  <div class="subtitle" id="txtAgora"></div>
+
+  <div class="passive hidden" id="foraAgora">
+    Lembrete de foco: Hoje não <span id="foraAgoraTxt"></span>
+  </div>
+
+  <button class="primary" onclick="concluirAgora()">Concluir AGORA</button>
+  <div class="reward hidden" id="rewardAgora"></div>
+</section>
+
+<!-- DECISÃO -->
+<section id="decisao" class="hidden center">
+  <h1>Energia disponível?</h1>
+  <div class="subtitle" id="txtDepois"></div>
+
+  <div class="passive hidden" id="foraDecisao">
+    Hoje, evite: <span id="foraDecisaoTxt"></span>
+  </div>
+
+  <button class="primary" onclick="iniciarDepois()">Iniciar o "DEPOIS"</button>
+  <button class="secondary" onclick="encerrarDia()">Encerrar dia</button>
+</section>
+
+<!-- EXECUÇÃO DEPOIS -->
+<section id="exec-depois" class="hidden center">
+  <h1>Execute o DEPOIS</h1>
+  <div class="subtitle" id="txtDepoisExec"></div>
+
+  <div class="passive hidden" id="foraDepois">
+    Lembrete de foco: Hoje não <span id="foraDepoisTxt"></span>
+  </div>
+
+  <button class="primary" onclick="encerrarDia()">Concluir e encerrar</button>
+</section>
+
+<!-- FECHAMENTO -->
+<section id="fechamento" class="hidden center">
+  <h1>Fechamento</h1>
+  <div class="subtitle">Você executou o AGORA?</div>
+
+  <button class="primary" onclick="fechar(true)">✅ Sim</button>
+  <button class="secondary" onclick="fechar(false)">❌ Não</button>
+</section>
+
+<!-- FECHAMENTO OK -->
+<section id="fechamento-ok" class="hidden center">
+  <div class="reward" id="rewardText"></div>
+  <div class="streak" id="streakText"></div>
+  <button class="primary" onclick="irParaHistorico()">Continuar</button>
+</section>
+
+<!-- FECHAMENTO NÃO -->
+<section id="fechamento-no" class="hidden center">
+  <div class="motivation" id="motivationText"></div>
+</section>
+
+<!-- HISTÓRICO (HOME) -->
+<section id="history">
+  <h1>Histórico</h1>
+  <div id="historyList"></div>
+
+  <button id="btnRegistrar" class="secondary" onclick="irParaDefinicao()">
+    Registrar o AGORA de hoje
+  </button>
+  <div class="countdown" id="countdown"></div>
+
+  <button class="secondary" onclick="show('insights')">Ver insights</button>
+</section>
+
+<!-- INSIGHTS -->
+<section id="insights" class="hidden">
+  <h1>Insights</h1>
+  <div class="subtitle">Espelho da sua execução.</div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="trocarInsight('semanal',this)">Semanal</button>
+    <button class="tab" onclick="trocarInsight('mensal',this)">Mensal</button>
+    <button class="tab" onclick="trocarInsight('anual',this)">Anual</button>
+  </div>
+
+  <div id="insight-semanal">
+    <div class="weekdays">
+      <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
+    </div>
+    <div class="grid" id="grid-semanal"></div>
+  </div>
+
+  <div id="insight-mensal" class="hidden">
+    <div class="grid" id="grid-mensal"></div>
+  </div>
+
+  <div id="insight-anual" class="hidden"></div>
+
+  <button class="secondary" onclick="show('history')">Voltar</button>
+</section>
+
+</div>
+
+<script>
+/* ===== DATA LOCAL (FONTE ÚNICA) ===== */
+function getLocalDateKey(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2,'0');
+  const d = String(date.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+
+/* ===== MOTIVAÇÕES ===== */
+const frasesFalha = [
+  "Ajustar não é falhar. Amanhã você começa melhor.",
+  "Reduza o AGORA amanhã. Clareza vem antes da força.",
+  "Consciência vale mais que cobrança.",
+  "Não negocie com a culpa. Negocie com o tamanho do AGORA."
+];
+
+/* ===== NAVEGAÇÃO ===== */
+function show(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+
+  if (id === 'history') {
+    carregarHistorico();
+    atualizarBotaoAmanha();
+  }
+  if (id === 'insights') carregarInsights();
+}
+
+function mostrarToast(msg){
+  const toast = document.getElementById('toast');
+  toast.innerText = msg;
+  toast.classList.remove('hidden');
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.classList.add('hidden'), 300);
+  }, 3000);
+}
+
+
+/* ===== DEFINIÇÃO ===== */
+function definir() {
+  if (!agora.value.trim() || !depois.value.trim() || !fora.value.trim()) {
+    mostrarToast("Preencha tudo para continuar");
+    return;
+  }
+
+  const data = {
+    data: getLocalDateKey(),
+    agora: agora.value.trim(),
+    depois: depois.value.trim(),
+    fora: fora.value.trim(),
+    feito: null
+  };
+  localStorage.setItem('rotina_' + data.data, JSON.stringify(data));
+  prepararFora(data.fora);
+  txtAgora.innerText = data.agora;
+  show('exec-agora');
+}
+
+/* ===== EXECUÇÃO ===== */
+function concluirAgora() {
+  mostrarRecompensaAgora();
+  const d = getHoje();
+
+  setTimeout(() => {
+    if (d.depois) {
+      txtDepois.innerText = d.depois;
+      show('decisao');
+    } else {
+      show('fechamento');
+    }
+  }, 600);
+}
+
+function iniciarDepois() {
+  txtDepoisExec.innerText = getHoje().depois;
+  show('exec-depois');
+}
+
+function encerrarDia() {
+  show('fechamento');
+}
+
+/* ===== FECHAMENTO ===== */
+function fechar(ok) {
+  const d = getHoje();
+  d.feito = ok;
+  localStorage.setItem('rotina_' + d.data, JSON.stringify(d));
+
+  if (ok) {
+    const s = atualizarStreak(true);
+    rewardText.innerText = "Agora você pode descansar sem pendência.";
+    streakText.innerText = `${s} dias começando pelo AGORA.`;
+    show('fechamento-ok');
+  } else {
+    const idx = new Date().getDate() % frasesFalha.length;
+    motivationText.innerText = frasesFalha[idx];
+    show('fechamento-no');
+    setTimeout(irParaHistorico, 1500);
+  }
+}
+
+/* ===== RECOMPENSAS ===== */
+function mostrarRecompensaAgora() {
+  const frases = ["Dia resolvido.","O resto é bônus.","Você fez o que importava."];
+  rewardAgora.innerText = frases[Math.floor(Math.random() * frases.length)];
+  rewardAgora.classList.remove('hidden');
+}
+
+/* ===== STREAK ===== */
+function atualizarStreak(ok) {
+  let s = parseInt(localStorage.getItem('streak_exec')) || 0;
+  s = ok ? s + 1 : 0;
+  localStorage.setItem('streak_exec', s);
+  return s;
+}
+
+/* ===== HISTÓRICO ===== */
+function carregarHistorico() {
+  historyList.innerHTML = '';
+  Object.keys(localStorage)
+    .filter(k => k.startsWith('rotina_'))
+    .sort().reverse()
+    .forEach(k => {
+      const d = JSON.parse(localStorage[k]);
+      const div = document.createElement('div');
+      div.className = 'block';
+      div.innerHTML = `
+        <strong>${d.feito ? '✅' : '❌'} ${d.agora}</strong><br>
+        <small>${d.data}</small>
+      `;
+      historyList.appendChild(div);
+    });
+}
+
+function irParaHistorico() {
+  show('history');
+}
+
+/* ===== BOTÃO AGORA / AMANHÃ ===== */
+function atualizarBotaoAmanha() {
+  const btn = document.getElementById('btnRegistrar');
+  const cd = document.getElementById('countdown');
+
+  const existeHoje = localStorage.getItem('rotina_' + getLocalDateKey());
+
+  if (!existeHoje) {
+    btn.classList.remove('disabled','secondary');
+    btn.classList.add('primary');
+    btn.innerText = 'Registrar o AGORA de hoje';
+    cd.innerText = '';
+    return;
+  }
+
+  const agora = new Date();
+  const amanha = new Date();
+  amanha.setHours(24,0,0,0);
+
+  const diff = amanha - agora;
+
+  if (diff <= 0) {
+    btn.classList.remove('disabled','secondary');
+    btn.classList.add('primary');
+    btn.innerText = 'Registrar o AGORA de hoje';
+    cd.innerText = '';
+  } else {
+    btn.classList.add('disabled');
+    btn.classList.remove('primary');
+    btn.classList.add('secondary');
+    btn.innerText = 'Registrar o AGORA de amanhã';
+
+    const h = String(Math.floor(diff/3600000)).padStart(2,'0');
+    const m = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    const s = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+    cd.innerText = `Disponível em ${h}:${m}:${s}`;
+
+    setTimeout(atualizarBotaoAmanha, 1000);
+  }
+}
+
+function irParaDefinicao() {
+  const btn = document.getElementById('btnRegistrar');
+  if (btn.classList.contains('disabled')) return;
+  show('define');
+}
+
+/* ===== INSIGHTS ===== */
+function carregarInsights() {
+  gerarSemanal();
+  gerarMensal();
+  gerarAnual();
+}
+
+function trocarInsight(tipo, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  ['semanal','mensal','anual'].forEach(i =>
+    document.getElementById('insight-' + i).classList.add('hidden')
+  );
+  document.getElementById('insight-' + tipo).classList.remove('hidden');
+}
+
+function gerarSemanal() {
+  const grid = document.getElementById('grid-semanal');
+  grid.innerHTML = '';
+
+  const hoje = new Date();
+  const diaSemana = hoje.getDay(); // 0 = Domingo
+  const domingo = new Date(hoje);
+  domingo.setDate(hoje.getDate() - diaSemana);
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(domingo);
+    d.setDate(domingo.getDate() + i);
+
+    const key = 'rotina_' + getLocalDateKey(d);
+    const feito = localStorage[key] && JSON.parse(localStorage[key]).feito;
+
+    const dot = document.createElement('div');
+    dot.className = 'dot ' + (feito ? 'ok' : 'fail');
+
+    grid.appendChild(dot);
+  }
+}
+
+
+function gerarMensal() {
+  const grid = document.getElementById('grid-mensal');
+  grid.innerHTML = '';
+
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  const dias = new Date(y, m + 1, 0).getDate();
+
+  for (let d = 1; d <= dias; d++) {
+    const key = 'rotina_' + getLocalDateKey(new Date(y, m, d));
+    const dot = document.createElement('div');
+
+    dot.className = 'dot ' +
+      (localStorage[key] && JSON.parse(localStorage[key]).feito ? 'ok' : 'fail');
+    dot.innerText = d;
+
+    grid.appendChild(dot);
+  }
+}
+
+function gerarAnual() {
+  const el = document.getElementById('insight-anual');
+  el.innerHTML = '';
+
+  const y = new Date().getFullYear();
+
+  for (let m = 0; m < 12; m++) {
+    let total = 0, feitos = 0;
+    const dias = new Date(y, m + 1, 0).getDate();
+
+    for (let d = 1; d <= dias; d++) {
+      total++;
+      const key = 'rotina_' + getLocalDateKey(new Date(y, m, d));
+      if (localStorage[key] && JSON.parse(localStorage[key]).feito) feitos++;
+    }
+
+    const pct = Math.round((feitos / total) * 100) || 0;
+
+    const row = document.createElement('div');
+    row.className = 'month-row';
+    row.innerHTML = `
+      ${new Date(y, m).toLocaleString('pt-BR',{month:'short'})}
+      <div class="bar"><span style="width:${pct}%"></span></div>
+    `;
+    el.appendChild(row);
+  }
+}
+
+/* ===== AUX ===== */
+function getHoje() {
+  return JSON.parse(localStorage.getItem('rotina_' + getLocalDateKey()));
+}
+
+function prepararFora(f) {
+  if (!f) return;
+  foraAgoraTxt.innerText = f;
+  foraDecisaoTxt.innerText = f;
+  foraDepoisTxt.innerText = f;
+  foraAgora.classList.remove('hidden');
+  foraDecisao.classList.remove('hidden');
+  foraDepois.classList.remove('hidden');
+}
+
+/* ===== INIT ===== */
+show('history');
+</script>
+
+<script>
+/* ===== DATA LOCAL (FONTE ÚNICA) ===== */
+function getLocalDateKey(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2,'0');
+  const d = String(date.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+
+/* ===== CONTROLE DE VIRADA DE DIA ===== */
+let __currentDayKey = getLocalDateKey();
+
+/* ===== MONITOR DE DATA (FIX PRINCIPAL) ===== */
+setInterval(() => {
+  const nowKey = getLocalDateKey();
+
+  if (nowKey !== __currentDayKey) {
+    __currentDayKey = nowKey;
+
+    carregarHistorico();
+    atualizarBotaoAmanha();
+    carregarInsights();
+  }
+}, 30000);
+
+/* ===== INIT ===== */
+show('history');
+
+</script>
+
+</body>
+</html>
